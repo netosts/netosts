@@ -1,16 +1,15 @@
-### Hi there 👋
+<h1 align="center">Hey, I'm Neto! 👋</h1>
 
-<!--
-**netosts/netosts** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+<h3 align="left">About me:</h3>
 
-Here are some ideas to get you started:
+- Full Stack Software Engineer
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+
+<h3 align="left">Skills:</h3>
+[![My Skills](https://skillicons.dev/icons?i=js,html,css,wasm)](https://skillicons.dev)
+
+<br>
+<h3 align="left">Stats:</h3>
+<div style="display: inline_block">
+   <img height="164em" src="https://github-readme-stats.vercel.app/api?username=netosts&count_private=true?&bg_color=FFFFFF&text_color=0000000&title_color=42b883"></a><img align="right"src="https://github-readme-stats.vercel.app/api/top-langs/?username=netosts&layout=compact&bg_color=FFFFFF&text_color=000000&title_color=42b883"></a>
+</div>
