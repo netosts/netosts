@@ -6,7 +6,8 @@
 
 
 <h3 align="left">Skills:</h3>
-[![My Skills](https://skillicons.dev/icons?i=js,html,css,wasm)](https://skillicons.dev)
+
+[![My Skills](https://skillicons.dev/icons?i=vue,laravel,php,postgres,mysql,pinia,ts,js,py,fastapi,git,html,css,tailwind,sass,cs,dotnet,linux,docker,vuetify)](https://skillicons.dev)
 
 <br>
 <h3 align="left">Stats:</h3>
