@@ -3,6 +3,7 @@
 <h3 align="left">About me:</h3>
 
 - Full Stack Software Engineer
+- Dream in years. Plan in months. Ship in days.
 
 
 <h3 align="left">Skills:</h3>
