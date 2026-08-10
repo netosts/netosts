@@ -111,7 +111,35 @@ export const projects: Project[] = [
 ];
 
 // Enquanto estiver vazio, a seção exibe cartões de "Em breve".
-export const contents: Content[] = [];
+export const contents: Content[] = [
+  // {
+  //   id: "motion",
+  //   title: "Construindo interfaces com movimento que fazem sentido",
+  //   kind: "Vídeo",
+  //   source: "YouTube",
+  //   date: "Mar 2025",
+  //   image: "/content/video-motion.png",
+  //   href: "#",
+  // },
+  // {
+  //   id: "state",
+  //   title: "Por que parei de alcançar o Redux por reflexo",
+  //   kind: "Artigo",
+  //   source: "Blog",
+  //   date: "Fev 2025",
+  //   image: "/content/article-state.png",
+  //   href: "#",
+  // },
+  // {
+  //   id: "tokens",
+  //   title: "Design tokens na prática: do Figma ao código",
+  //   kind: "Artigo",
+  //   source: "Blog",
+  //   date: "Jan 2025",
+  //   image: "/content/article-tokens.png",
+  //   href: "#",
+  // },
+];
 
 // Assuntos que o usuário pode escolher no chat de contato.
 export const contactTopics = [
