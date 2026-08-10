@@ -39,7 +39,9 @@ export function ContactChat() {
   function handleSend(e: React.FormEvent) {
     e.preventDefault();
     if (!topic) return;
-    const subject = encodeURIComponent(selectedTopic?.label ?? "Contato pelo portfólio");
+    const subject = encodeURIComponent(
+      selectedTopic?.label ?? "Contato pelo portfólio",
+    );
     const body = encodeURIComponent(message);
     window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
     setSent(true);
@@ -233,7 +235,7 @@ export function ContactChat() {
           setShowBubble(false);
         }}
         aria-label={open ? "Fechar chat de contato" : "Abrir chat de contato"}
-        className="relative flex size-14 items-center justify-center overflow-hidden rounded-full border border-border bg-card shadow-lg transition-transform hover:scale-105 md:size-16"
+        className="relative flex size-14 items-center justify-center overflow-hidden border border-border bg-card shadow-lg rounded-full  transition-transform hover:scale-105 md:size-16"
       >
         {open ? (
           <X className="size-5 text-foreground" />
@@ -243,7 +245,7 @@ export function ContactChat() {
             alt="Falar comigo"
             width={64}
             height={64}
-            className="size-full object-cover"
+            className="size-full object-cover "
             crossOrigin="anonymous"
           />
         )}

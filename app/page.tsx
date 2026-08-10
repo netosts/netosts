@@ -39,7 +39,11 @@ export default function Page() {
 
       {/* Projetos */}
       <section id="projetos" className="scroll-mt-8 py-8">
-        <SectionLabel index="01" title="Projetos" hint="trabalho e open source" />
+        <SectionLabel
+          index="01"
+          title="Projetos"
+          hint="profissional e open source"
+        />
         <ProjectSlider projects={projects} />
       </section>
 

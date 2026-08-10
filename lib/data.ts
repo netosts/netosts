@@ -26,8 +26,8 @@ export const profile = {
   name: "Silvio dos Santos Neto",
   role: "Full Stack Software Engineer | Web, APIs & AI",
   intro:
-    "Construo automações para negócios. Aplicações web, APIs, painéis administrativos e soluções com IA, desenvolvidas de forma segura e preparada para evoluir.",
-  avatar: "https://github.com/netosts.png",
+    "Construo aplicações, automações e soluções com IA para negócios, com segurança e prontas para evoluir.",
+  avatar: "/photo_small.png",
   email: "netostt91@gmail.com",
   phone: "+55 79 99662-9246",
   location: "Brasil · Remoto",
@@ -45,7 +45,7 @@ export const projects: Project[] = [
       "Plataforma distribuída orientada a APIs para fluxos de agentes autônomos e integrações com ferramentas externas, com comunicação entre serviços e autenticação.",
     company: "Netstic",
     type: "Profissional",
-    period: "Dez 2023 – atual",
+    period: "Web App · Sistema interno",
     stack: [
       "Python",
       "FastAPI",
@@ -58,24 +58,25 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: "sysadmu",
-    title: "Modernização do Sysadmu",
-    description:
-      "Migração de um sistema governamental com dez anos de Laravel 5 para 10 e Vue 2 para 3, melhorando manutenibilidade, desempenho e experiência de desenvolvimento.",
-    company: "Netstic",
-    type: "Profissional",
-    period: "Projeto profissional",
-    stack: ["PHP", "Laravel", "JavaScript", "Vue.js", "PostgreSQL"],
-  },
-  {
     id: "wepray",
     title: "Plataforma WePray",
     description:
       "Modernização de uma plataforma social internacional em produção, incluindo APIs, autenticação, notificações, PWA, integrações e otimizações no PostgreSQL.",
     company: "WePray",
     type: "Profissional",
-    period: "Nov 2024 – Abr 2026",
+    period: "Multiplataforma",
     stack: ["Laravel 11", "Nuxt 3", "Vue 3", "TypeScript", "PostgreSQL", "PWA"],
+    href: "https://wepray.org",
+  },
+  {
+    id: "sysadmu",
+    title: "Modernização do Sysadmu",
+    description:
+      "Migração de um sistema governamental com dez anos de Laravel 5 para 10 e Vue 2 para 3, melhorando manutenibilidade, desempenho e experiência de desenvolvimento.",
+    company: "Netstic",
+    type: "Profissional",
+    period: "Web App · Sistema interno",
+    stack: ["PHP", "Laravel", "JavaScript", "Vue.js", "PostgreSQL"],
   },
   {
     id: "eprotec",
@@ -84,7 +85,7 @@ export const projects: Project[] = [
       "Sistema de gestão para uma consultoria de infraestrutura, desenvolvido a partir dos requisitos dos stakeholders com foco em soluções sustentáveis e de fácil manutenção.",
     company: "Eprotec Engenharia",
     type: "Profissional",
-    period: "Jun 2024 – Mai 2025",
+    period: "Web App · Sistema interno",
     stack: ["PHP", "Laravel", "Vue.js", "PostgreSQL", "Docker"],
   },
   {
@@ -94,7 +95,7 @@ export const projects: Project[] = [
       "Evolução de observabilidade, validação, internacionalização e processamento assíncrono de emails em uma plataforma de saúde baseada em inteligência artificial.",
     company: "IAssist Tecnologia",
     type: "Profissional",
-    period: "Mai 2024 – Ago 2024",
+    period: "Web App · Sistema interno",
     stack: ["Python", "Pydantic", "Celery", "i18n", "Logging"],
   },
   {
@@ -104,7 +105,7 @@ export const projects: Project[] = [
       "Pacote Laravel open source e documentado para Firebase Cloud Messaging, com limpeza de tokens, suporte a múltiplos dispositivos e diferentes tipos de mensagem.",
     company: "Projeto open source",
     type: "Open source",
-    period: "Disponível no GitHub",
+    period: "Package · Laravel 10+",
     stack: ["PHP", "Laravel", "Firebase Cloud Messaging"],
     href: "https://github.com/netosts/laravel-fcm-notifications",
   },
