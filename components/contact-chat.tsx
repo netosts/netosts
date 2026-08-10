@@ -235,7 +235,7 @@ export function ContactChat() {
           setShowBubble(false);
         }}
         aria-label={open ? "Fechar chat de contato" : "Abrir chat de contato"}
-        className="relative flex size-14 items-center justify-center overflow-hidden border border-border bg-card shadow-lg rounded-full  transition-transform hover:scale-105 md:size-16"
+        className="relative flex size-14 items-center justify-center overflow-visible rounded-full border border-border bg-card shadow-lg transition-transform hover:scale-105 md:size-16"
       >
         {open ? (
           <X className="size-5 text-foreground" />
@@ -245,12 +245,12 @@ export function ContactChat() {
             alt="Falar comigo"
             width={64}
             height={64}
-            className="size-full object-cover "
+            className="size-full rounded-full object-cover"
             crossOrigin="anonymous"
           />
         )}
         {!open && (
-          <span className="absolute bottom-0.5 right-0.5 size-3.5 rounded-full border-2 border-card bg-green-500" />
+          <span className="absolute bottom-1 right-1 z-10 size-3.5 translate-x-1/4 translate-y-1/4 rounded-full border-2 border-card bg-green-500" />
         )}
       </button>
     </div>
