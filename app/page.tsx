@@ -1,31 +1,21 @@
 import { ProjectSlider } from "@/components/project-slider";
 import { ContentSection } from "@/components/content-section";
 import { ContactChat } from "@/components/contact-chat";
-import { contents, profile, projects } from "@/lib/data";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { SectionHeading } from "@/components/section-heading";
+import { profile, projects, contents } from "@/lib/data";
+
+const FEATURED_PROJECTS = 5;
+const RECENT_CONTENTS = 6;
 
 export default function Page() {
+  const featuredProjects = projects.slice(0, FEATURED_PROJECTS);
+  const recentContents = contents.slice(0, RECENT_CONTENTS);
+
   return (
     <main className="mx-auto min-h-screen max-w-5xl px-5 md:px-8">
-      {/* Cabeçalho minimalista */}
-      <header className="flex items-baseline justify-between gap-4 py-8">
-        <span className="font-mono text-sm tracking-tight text-foreground">
-          {profile.name}
-        </span>
-        <nav className="flex items-center gap-5 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-          <a
-            href="#projetos"
-            className="transition-colors hover:text-foreground"
-          >
-            Projetos
-          </a>
-          <a
-            href="#conteudos"
-            className="transition-colors hover:text-foreground"
-          >
-            Conteúdos
-          </a>
-        </nav>
-      </header>
+      <SiteHeader />
 
       {/* Introdução curta, no lugar do hero tradicional */}
       <section className="max-w-2xl py-14 md:py-20">
@@ -37,69 +27,40 @@ export default function Page() {
         </h1>
       </section>
 
-      {/* Projetos */}
+      {/* Projetos em destaque */}
       <section id="projetos" className="scroll-mt-8 py-8">
-        <SectionLabel
+        <SectionHeading
           index="01"
-          title="Projetos"
-          hint="profissional e open source"
+          title="Projetos em destaque"
+          action={
+            projects.length > FEATURED_PROJECTS
+              ? { label: `Ver todos (${projects.length})`, href: "/projetos" }
+              : undefined
+          }
         />
-        <ProjectSlider projects={projects} />
+        <ProjectSlider projects={featuredProjects} />
       </section>
 
-      {/* Conteúdos */}
+      {/* Conteúdos recentes */}
       <section id="conteudos" className="scroll-mt-8 py-16 md:py-24">
-        <SectionLabel
+        <SectionHeading
           index="02"
           title="Conteúdos recentes"
-          hint="vídeos e artigos"
+          action={
+            contents.length > RECENT_CONTENTS
+              ? { label: `Ver todos (${contents.length})`, href: "/conteudos" }
+              : undefined
+          }
         />
-        <ContentSection contents={contents} />
+        <ContentSection contents={recentContents} />
       </section>
 
       {/* Âncora que revela o chat de contato */}
-      <div id="contato" className="scroll-mt-8">
-        <div id="chat-anchor" aria-hidden className="h-px w-full" />
-      </div>
+      <div id="chat-anchor" aria-hidden className="h-px w-full" />
 
-      {/* Rodapé */}
-      <footer className="flex flex-col gap-2 border-t border-border py-10 font-mono text-xs text-muted-foreground md:flex-row md:items-center md:justify-between">
-        <span>
-          © {new Date().getFullYear()} {profile.name}
-        </span>
-        <a
-          href={`mailto:${profile.email}`}
-          className="transition-colors hover:text-foreground"
-        >
-          {profile.email}
-        </a>
-      </footer>
+      <SiteFooter />
 
       <ContactChat />
     </main>
-  );
-}
-
-function SectionLabel({
-  index,
-  title,
-  hint,
-}: {
-  index: string;
-  title: string;
-  hint: string;
-}) {
-  return (
-    <div className="mb-8 flex items-end justify-between gap-4 border-b border-border pb-4">
-      <div className="flex items-baseline gap-3">
-        <span className="font-mono text-xs text-muted-foreground">{index}</span>
-        <h2 className="text-xl font-medium tracking-tight md:text-2xl">
-          {title}
-        </h2>
-      </div>
-      <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-        {hint}
-      </span>
-    </div>
   );
 }
