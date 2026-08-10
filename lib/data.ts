@@ -24,9 +24,9 @@ export type Content = {
 
 export const profile = {
   name: "Silvio dos Santos Neto",
-  role: "Full Stack Software Engineer | WEB, APP & AI",
+  role: "Full Stack Software Engineer | Web, APIs & AI",
   intro:
-    "Desenvolvo soluções de ponta a ponta, conectando backend, frontend e infraestrutura para entregar sistemas confiáveis e fáceis de manter.",
+    "Construo automações para negócios. Aplicações web, APIs, painéis administrativos e soluções com IA, desenvolvidas de forma segura e preparada para evoluir.",
   avatar: "https://github.com/netosts.png",
   email: "netostt91@gmail.com",
   phone: "+55 79 99662-9246",
