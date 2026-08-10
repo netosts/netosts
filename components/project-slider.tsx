@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import Image from "next/image";
-import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Code2 } from "lucide-react";
 import type { Project } from "@/lib/data";
 
 export function ProjectSlider({ projects }: { projects: Project[] }) {
@@ -12,10 +12,7 @@ export function ProjectSlider({ projects }: { projects: Project[] }) {
 
   const go = useCallback(
     (next: number) => {
-      setIndex((prev) => {
-        const total = count;
-        return ((next % total) + total) % total;
-      });
+      setIndex(((next % count) + count) % count);
     },
     [count],
   );
@@ -135,18 +132,32 @@ function ProjectSlide({
   return (
     <div className="min-w-full" aria-hidden={!active}>
       <div className="grid gap-0 md:grid-cols-2">
-        {/* Imagem / preview */}
+        {/* Imagem / identidade visual */}
         <div className="relative aspect-[4/3] overflow-hidden bg-muted md:aspect-auto md:min-h-[26rem]">
-          <Image
-            src={project.image || "/placeholder.svg"}
-            alt={`Prévia do projeto ${project.title}`}
-            fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-cover"
-            crossOrigin="anonymous"
-            draggable={false}
-            priority={active}
-          />
+          {project.image ? (
+            <Image
+              src={project.image}
+              alt={`Prévia do projeto ${project.title}`}
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover"
+              crossOrigin="anonymous"
+              draggable={false}
+              priority={active}
+            />
+          ) : (
+            <div className="flex h-full min-h-72 flex-col justify-between p-8 md:min-h-[26rem] md:p-10">
+              <Code2 className="size-8 text-[var(--accent-solid)]" />
+              <div className="space-y-3">
+                <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                  {project.company}
+                </p>
+                <p className="max-w-sm text-3xl font-medium leading-tight md:text-4xl">
+                  {project.title}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Conteúdo */}
@@ -164,7 +175,7 @@ function ProjectSlide({
                 {project.type}
               </span>
               <span aria-hidden>·</span>
-              <span>{project.year}</span>
+              <span>{project.period}</span>
             </div>
 
             <h3 className="text-pretty text-3xl font-medium tracking-tight md:text-4xl">

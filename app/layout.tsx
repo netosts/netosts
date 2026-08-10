@@ -10,27 +10,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Seu Nome — Projetos & Conteúdos",
+  title: "Silvio dos Santos Neto | Full Stack Software Engineer",
   description:
-    "Portfólio de projetos pessoais e profissionais, além de vídeos e artigos.",
-  generator: "v0.app",
-  icons: {
-    icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
-    ],
-    apple: "/apple-icon.png",
-  },
+    "Full Stack Software Engineer com mais de 2 anos de experiência em APIs, JavaScript, TypeScript, Python, PHP e Linux.",
+  authors: [{ name: "Silvio dos Santos Neto" }],
+  creator: "Silvio dos Santos Neto",
+  keywords: [
+    "Full Stack Software Engineer",
+    "APIs",
+    "JavaScript",
+    "TypeScript",
+    "Python",
+    "FastAPI",
+    "PHP",
+    "Laravel",
+    "Vue.js",
+    "Nuxt.js",
+    "PostgreSQL",
+    "Docker",
+    "Linux",
+  ],
 };
 
 export const viewport: Viewport = {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { X, Send, Check } from "lucide-react";
 import { profile, contactTopics } from "@/lib/data";
@@ -13,7 +13,7 @@ export function ContactChat() {
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
 
-  // Revela o chat quando o usuário passa da seção de conteúdos.
+  // Revela o chat quando o usuário chega ao contato.
   useEffect(() => {
     const anchor = document.getElementById("chat-anchor");
     if (!anchor) return;
@@ -39,7 +39,9 @@ export function ContactChat() {
   function handleSend(e: React.FormEvent) {
     e.preventDefault();
     if (!topic) return;
-    // Apenas visual por enquanto: simula o envio.
+    const subject = encodeURIComponent(selectedTopic?.label ?? "Contato pelo portfólio");
+    const body = encodeURIComponent(message);
+    window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
     setSent(true);
   }
 
@@ -62,7 +64,7 @@ export function ContactChat() {
           }}
           className="max-w-[15rem] origin-bottom-right animate-in fade-in slide-in-from-bottom-2 rounded-2xl rounded-br-sm border border-border bg-card px-4 py-3 text-left text-sm leading-relaxed text-card-foreground shadow-lg transition-transform hover:-translate-y-0.5"
         >
-          Olá! Se quiser falar comigo, é só clicar aqui. 👋
+          Olá! Se quiser falar comigo, é só clicar aqui.
         </button>
       )}
 
@@ -73,7 +75,7 @@ export function ContactChat() {
           <div className="flex items-center gap-3 border-b border-border p-4">
             <span className="relative">
               <Image
-                src={profile.avatar || "/placeholder.svg"}
+                src={profile.avatar}
                 alt={profile.name}
                 width={40}
                 height={40}
@@ -112,11 +114,10 @@ export function ContactChat() {
                   <Check className="size-6" />
                 </span>
                 <p className="text-sm font-medium">
-                  Mensagem pronta para enviar!
+                  Seu aplicativo de email foi aberto
                 </p>
                 <p className="text-pretty text-xs leading-relaxed text-muted-foreground">
-                  O envio real por email ainda será conectado. Por enquanto, use
-                  um dos canais abaixo ou me chame direto.
+                  Revise a mensagem no seu aplicativo e confirme o envio.
                 </p>
                 <button
                   onClick={reset}
@@ -130,7 +131,7 @@ export function ContactChat() {
                 {/* Mensagem de boas-vindas */}
                 <div className="flex gap-2.5">
                   <Image
-                    src={profile.avatar || "/placeholder.svg"}
+                    src={profile.avatar}
                     alt=""
                     width={28}
                     height={28}
@@ -204,9 +205,9 @@ export function ContactChat() {
                     ou
                   </span>
                   {[
+                    { label: "Email", href: `mailto:${profile.email}` },
                     { label: "GitHub", href: profile.socials.github },
                     { label: "LinkedIn", href: profile.socials.linkedin },
-                    { label: "YouTube", href: profile.socials.youtube },
                   ].map((s) => (
                     <a
                       key={s.label}
@@ -238,7 +239,7 @@ export function ContactChat() {
           <X className="size-5 text-foreground" />
         ) : (
           <Image
-            src={profile.avatar || "/placeholder.svg"}
+            src={profile.avatar}
             alt="Falar comigo"
             width={64}
             height={64}

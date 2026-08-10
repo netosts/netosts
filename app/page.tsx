@@ -1,7 +1,7 @@
 import { ProjectSlider } from "@/components/project-slider";
 import { ContentSection } from "@/components/content-section";
 import { ContactChat } from "@/components/contact-chat";
-import { profile, projects, contents } from "@/lib/data";
+import { contents, profile, projects } from "@/lib/data";
 
 export default function Page() {
   return (
@@ -39,11 +39,7 @@ export default function Page() {
 
       {/* Projetos */}
       <section id="projetos" className="scroll-mt-8 py-8">
-        <SectionLabel
-          index="01"
-          title="Projetos"
-          hint="pessoais e profissionais"
-        />
+        <SectionLabel index="01" title="Projetos" hint="trabalho e open source" />
         <ProjectSlider projects={projects} />
       </section>
 
@@ -58,14 +54,21 @@ export default function Page() {
       </section>
 
       {/* Âncora que revela o chat de contato */}
-      <div id="chat-anchor" aria-hidden className="h-px w-full" />
+      <div id="contato" className="scroll-mt-8">
+        <div id="chat-anchor" aria-hidden className="h-px w-full" />
+      </div>
 
       {/* Rodapé */}
       <footer className="flex flex-col gap-2 border-t border-border py-10 font-mono text-xs text-muted-foreground md:flex-row md:items-center md:justify-between">
         <span>
           © {new Date().getFullYear()} {profile.name}
         </span>
-        <span>Feito com atenção aos detalhes.</span>
+        <a
+          href={`mailto:${profile.email}`}
+          className="transition-colors hover:text-foreground"
+        >
+          {profile.email}
+        </a>
       </footer>
 
       <ContactChat />

@@ -1,14 +1,14 @@
-<h1 align="center">Hey, I'm Neto! 👋</h1>
+<h1 align="center">Silvio dos Santos Neto</h1>
 
 <h3 align="left">About me:</h3>
 
-- Full Stack Software Engineer
+- Full Stack Software Engineer focused on APIs, JavaScript, and Linux
 - Dream in years. Plan in months. Ship in days.
 
 
 <h3 align="left">Skills:</h3>
 
-[![My Skills](https://skillicons.dev/icons?i=vue,laravel,php,postgres,mysql,pinia,ts,js,py,fastapi,git,html,css,tailwind,sass,cs,dotnet,linux,docker,vuetify)](https://skillicons.dev)
+[![My Skills](https://skillicons.dev/icons?i=vue,nuxt,laravel,php,postgres,mysql,redis,ts,js,py,fastapi,git,githubactions,docker,linux)](https://skillicons.dev)
 
 <br>
 <h3 align="left">Stats:</h3>
