@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Code2 } from "lucide-react";
 import type { Project } from "@/lib/data";
@@ -12,7 +12,10 @@ export function ProjectSlider({ projects }: { projects: Project[] }) {
 
   const go = useCallback(
     (next: number) => {
-      setIndex(((next % count) + count) % count);
+      setIndex((prev) => {
+        const total = count;
+        return ((next % total) + total) % total;
+      });
     },
     [count],
   );
