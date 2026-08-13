@@ -41,7 +41,9 @@ export function ProjectSlider({ projects }: { projects: Project[] }) {
   });
 
   const onPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
     drag.current = { startX: e.clientX, active: true };
+    e.currentTarget.setPointerCapture(e.pointerId);
   };
   const onPointerUp = (e: React.PointerEvent) => {
     if (!drag.current.active) return;
@@ -51,6 +53,9 @@ export function ProjectSlider({ projects }: { projects: Project[] }) {
       if (delta < 0) next();
       else prev();
     }
+  };
+  const onPointerCancel = () => {
+    drag.current.active = false;
   };
 
   return (
@@ -65,10 +70,11 @@ export function ProjectSlider({ projects }: { projects: Project[] }) {
       <div className="overflow-hidden rounded-2xl border border-border">
         <div
           ref={trackRef}
-          className="flex transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+          className="flex cursor-grab touch-pan-y select-none transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] active:cursor-grabbing"
           style={{ transform: `translateX(-${index * 100}%)` }}
           onPointerDown={onPointerDown}
           onPointerUp={onPointerUp}
+          onPointerCancel={onPointerCancel}
         >
           {projects.map((project, i) => (
             <ProjectSlide
@@ -108,14 +114,14 @@ export function ProjectSlider({ projects }: { projects: Project[] }) {
           <button
             onClick={prev}
             aria-label="Projeto anterior"
-            className="flex size-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-accent"
+            className="flex size-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-accent cursor-pointer"
           >
             <ArrowLeft className="size-4" />
           </button>
           <button
             onClick={next}
             aria-label="Próximo projeto"
-            className="flex size-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-accent"
+            className="cursor-pointer flex size-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-accent"
           >
             <ArrowRight className="size-4" />
           </button>
@@ -211,7 +217,12 @@ function ProjectSlide({
             {project.href && (
               <a
                 href={project.href}
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground transition-opacity hover:opacity-70"
+                target="_blank"
+                rel="noopener noreferrer"
+                draggable={false}
+                onPointerDown={(event) => event.stopPropagation()}
+                onPointerUp={(event) => event.stopPropagation()}
+                className="inline-flex cursor-pointer items-center gap-1.5 text-sm font-medium text-foreground transition-opacity hover:opacity-70"
               >
                 Ver projeto
                 <ArrowUpRight className="size-4" />
