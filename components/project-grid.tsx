@@ -80,7 +80,7 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
                     {project.type}
                   </span>
                   <span aria-hidden>·</span>
-                  <span>{project.period}</span>
+                  <span>{project.category}</span>
                 </div>
 
                 <h3 className="text-pretty text-xl font-medium tracking-tight">

@@ -11,7 +11,7 @@ export type Project = {
   description: string;
   company: string;
   type: EProjectType;
-  period: string;
+  category: string;
   stack: string[];
   image?: string;
   href?: string;
@@ -44,13 +44,13 @@ export const profile = {
 
 export const projects: Project[] = [
   {
-    id: "internet-of-agents",
-    title: "Internet of Agents",
+    id: "agentic-workflow-platform",
+    title: "Agentic Workflow Platform",
+    category: "Web App · A2A · MCP · OpenAPI",
     description:
-      "Plataforma distribuída orientada a APIs para fluxos de agentes autônomos e integrações com ferramentas externas, com comunicação entre serviços e autenticação.",
+      "Plataforma distribuída orientada a APIs, A2A e MCPs para fluxos de agentes autônomos e integrações com ferramentas externas e internas, com comunicação entre serviços e autenticação.",
     company: "Netstic",
     type: EProjectType.TRABALHO,
-    period: "Web App · Sistema interno",
     stack: [
       "Python",
       "FastAPI",
@@ -65,52 +65,52 @@ export const projects: Project[] = [
   {
     id: "wepray",
     title: "Plataforma WePray",
+    category: "Multiplataforma",
     description:
       "Modernização de uma plataforma social internacional em produção, incluindo APIs, autenticação, notificações, PWA, integrações e otimizações no PostgreSQL.",
     company: "WePray",
     type: EProjectType.TRABALHO,
-    period: "Multiplataforma",
     stack: ["Laravel 11", "Nuxt 3", "Vue 3", "TypeScript", "PostgreSQL", "PWA"],
     href: "https://wepray.org",
   },
   {
     id: "sysadmu",
     title: "Modernização do Sysadmu",
+    category: "Web App · Sistema interno",
     description:
       "Migração de um sistema governamental com dez anos de Laravel 5 para 10 e Vue 2 para 3, melhorando manutenibilidade, desempenho e experiência de desenvolvimento.",
     company: "Netstic",
     type: EProjectType.TRABALHO,
-    period: "Web App · Sistema interno",
     stack: ["PHP", "Laravel", "JavaScript", "Vue.js", "PostgreSQL"],
   },
   {
     id: "eprotec",
     title: "Gestão de clientes e projetos",
+    category: "Web App · Sistema interno",
     description:
       "Sistema de gestão para uma consultoria de infraestrutura, desenvolvido a partir dos requisitos dos stakeholders com foco em soluções sustentáveis e de fácil manutenção.",
     company: "Eprotec Engenharia",
     type: EProjectType.TRABALHO,
-    period: "Web App · Sistema interno",
     stack: ["PHP", "Laravel", "Vue.js", "PostgreSQL", "Docker"],
   },
   {
     id: "iassist",
     title: "Plataforma de saúde com IA",
+    category: "Web App · Sistema interno",
     description:
       "Evolução de observabilidade, validação, internacionalização e processamento assíncrono de emails em uma plataforma de saúde baseada em inteligência artificial.",
     company: "IAssist Tecnologia",
     type: EProjectType.TRABALHO,
-    period: "Web App · Sistema interno",
     stack: ["Python", "Pydantic", "Celery", "i18n", "Logging"],
   },
   {
     id: "laravel-fcm-notifications",
     title: "Laravel FCM Notifications",
+    category: "Package · Laravel 10+",
     description:
       "Pacote Laravel open source e documentado para Firebase Cloud Messaging, com limpeza de tokens, suporte a múltiplos dispositivos e diferentes tipos de mensagem.",
     company: "Projeto open source",
     type: EProjectType.PESSOAL,
-    period: "Package · Laravel 10+",
     stack: ["PHP", "Laravel", "Firebase Cloud Messaging"],
     href: "https://github.com/netosts/laravel-fcm-notifications",
   },

@@ -178,7 +178,7 @@ function ProjectSlide({
                 {project.type}
               </span>
               <span aria-hidden>·</span>
-              <span>{project.period}</span>
+              <span>{project.category}</span>
             </div>
 
             <h3 className="text-pretty text-3xl font-medium tracking-tight md:text-4xl">
