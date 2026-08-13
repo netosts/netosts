@@ -15,6 +15,7 @@ export type Project = {
   stack: string[];
   video?: {
     poster: string;
+    aspectRatio: string;
     sources: Array<{
       src: string;
       type: string;
@@ -60,6 +61,7 @@ export const projects: Project[] = [
     type: EProjectType.TRABALHO,
     video: {
       poster: "/project/workflow/poster-pt.webp",
+      aspectRatio: "16 / 9",
       sources: [
         { src: "/project/workflow/demo-pt.webm", type: "video/webm" },
         { src: "/project/workflow/demo-pt.mp4", type: "video/mp4" },
@@ -89,6 +91,7 @@ export const projects: Project[] = [
     type: EProjectType.TRABALHO,
     video: {
       poster: "/project/wepray/poster.webp",
+      aspectRatio: "8 / 5",
       sources: [
         { src: "/project/wepray/demo.webm", type: "video/webm" },
         { src: "/project/wepray/demo.mp4", type: "video/mp4" },

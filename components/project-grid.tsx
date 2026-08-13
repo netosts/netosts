@@ -59,9 +59,16 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
               className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border transition-colors hover:bg-accent"
             >
               <div
-                className={`relative aspect-[16/10] overflow-hidden ${
-                  project.video ? "bg-black" : "bg-muted"
+                className={`relative overflow-hidden ${
+                  project.video
+                    ? "bg-black"
+                    : "aspect-[16/10] bg-muted"
                 }`}
+                style={
+                  project.video
+                    ? { aspectRatio: project.video.aspectRatio }
+                    : undefined
+                }
               >
                 {project.video ? (
                   <video

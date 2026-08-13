@@ -139,97 +139,104 @@ function ProjectSlide({
   active: boolean;
 }) {
   return (
-    <div className="min-w-full" aria-hidden={!active}>
-      <div className="grid gap-0 md:h-[26rem] md:grid-cols-2">
-        {/* Imagem / identidade visual */}
-        <div
-          className={`relative overflow-hidden md:aspect-auto md:h-full ${
-            project.video ? "aspect-video bg-black" : "aspect-[4/3] bg-muted"
-          }`}
-        >
-          {project.video ? (
-            <ProjectVideo project={project} active={active} />
-          ) : project.image ? (
-            <Image
-              src={project.image}
-              alt={`Prévia do projeto ${project.title}`}
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover"
-              crossOrigin="anonymous"
-              draggable={false}
-              priority={active}
-            />
-          ) : (
-            <div className="flex h-full min-h-72 flex-col justify-between p-8 md:min-h-0 md:p-10">
-              <Code2 className="size-8 text-[var(--accent-solid)]" />
-              <div className="space-y-3">
-                <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                  {project.company}
-                </p>
-                <p className="max-w-sm text-3xl font-medium leading-tight md:text-4xl">
-                  {project.title}
-                </p>
-              </div>
+    <div
+      className="grid min-w-full gap-0 lg:grid-cols-[3fr_2fr]"
+      aria-hidden={!active}
+    >
+      {/* Imagem / identidade visual */}
+      <div
+        className={`relative overflow-hidden ${
+          project.video
+            ? "w-full self-start bg-black"
+            : "aspect-[4/3] bg-muted lg:h-full lg:aspect-auto"
+        }`}
+        style={
+          project.video
+            ? { aspectRatio: project.video.aspectRatio }
+            : undefined
+        }
+      >
+        {project.video ? (
+          <ProjectVideo project={project} active={active} />
+        ) : project.image ? (
+          <Image
+            src={project.image}
+            alt={`Prévia do projeto ${project.title}`}
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
+            crossOrigin="anonymous"
+            draggable={false}
+            priority={active}
+          />
+        ) : (
+          <div className="flex h-full min-h-72 flex-col justify-between p-8 md:min-h-0 md:p-10">
+            <Code2 className="size-8 text-[var(--accent-solid)]" />
+            <div className="space-y-3">
+              <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                {project.company}
+              </p>
+              <p className="max-w-sm text-3xl font-medium leading-tight md:text-4xl">
+                {project.title}
+              </p>
             </div>
-          )}
+          </div>
+        )}
+      </div>
+
+      {/* Resumo */}
+      <div className="space-y-5 bg-background p-8 md:p-10 lg:p-8">
+        <div className="flex flex-wrap items-center gap-3 font-mono text-xs uppercase tracking-widest text-muted-foreground">
+          <span
+            className="inline-flex items-center rounded-full px-2.5 py-1"
+            style={{
+              color: "var(--accent-solid)",
+              backgroundColor:
+                "color-mix(in oklch, var(--accent-solid) 12%, transparent)",
+            }}
+          >
+            {project.type}
+          </span>
+          <span aria-hidden>·</span>
+          <span>{project.category}</span>
         </div>
 
-        {/* Conteúdo */}
-        <div className="flex flex-col justify-between gap-8 p-8 md:h-full md:p-10">
-          <div className="space-y-5">
-            <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-              <span
-                className="inline-flex items-center rounded-full px-2.5 py-1"
-                style={{
-                  color: "var(--accent-solid)",
-                  backgroundColor:
-                    "color-mix(in oklch, var(--accent-solid) 12%, transparent)",
-                }}
-              >
-                {project.type}
-              </span>
-              <span aria-hidden>·</span>
-              <span>{project.category}</span>
-            </div>
+        <h3 className="text-pretty text-3xl font-medium tracking-tight">
+          {project.title}
+        </h3>
 
-            <h3 className="text-pretty text-3xl font-medium tracking-tight md:text-4xl">
-              {project.title}
-            </h3>
+        <p className="max-w-prose text-pretty leading-relaxed text-muted-foreground">
+          {project.description}
+        </p>
+      </div>
 
-            <p className="max-w-prose text-pretty leading-relaxed text-muted-foreground">
-              {project.description}
-            </p>
-          </div>
+      {/* Tecnologias e link */}
+      <div className="flex flex-col gap-5 border-t border-border bg-background p-8 md:p-10 lg:col-span-2 lg:flex-row lg:items-center lg:justify-between lg:px-8 lg:py-6">
+        <ul className="flex flex-wrap gap-2">
+          {project.stack.map((tech) => (
+            <li
+              key={tech}
+              className="rounded-md border border-border px-2.5 py-1 font-mono text-xs text-muted-foreground"
+            >
+              {tech}
+            </li>
+          ))}
+        </ul>
 
-          <div className="space-y-5">
-            <ul className="flex flex-wrap gap-2">
-              {project.stack.map((tech) => (
-                <li
-                  key={tech}
-                  className="rounded-md border border-border px-2.5 py-1 font-mono text-xs text-muted-foreground"
-                >
-                  {tech}
-                </li>
-              ))}
-            </ul>
-
-            {project.href && (
-              <a
-                href={project.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                draggable={false}
-                onPointerDown={(event) => event.stopPropagation()}
-                onPointerUp={(event) => event.stopPropagation()}
-                className="inline-flex cursor-pointer items-center gap-1.5 text-sm font-medium text-foreground transition-opacity hover:opacity-70"
-              >
-                Ver projeto
-                <ArrowUpRight className="size-4" />
-              </a>
-            )}
-          </div>
-        </div>
+        {project.href && (
+          <a
+            href={project.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            draggable={false}
+            onPointerDown={(event) => event.stopPropagation()}
+            onPointerUp={(event) => event.stopPropagation()}
+            className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 text-sm font-medium text-foreground transition-opacity hover:opacity-70"
+          >
+            Ver projeto
+            <ArrowUpRight className="size-4" />
+          </a>
+        )}
       </div>
     </div>
   );
