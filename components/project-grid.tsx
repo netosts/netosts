@@ -54,6 +54,8 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
           <li key={project.id}>
             <a
               href={project.href ?? "#"}
+              target="_blank"
+              rel="noopener noreferrer"
               className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border transition-colors hover:bg-accent"
             >
               <div

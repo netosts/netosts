@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ProjectGrid } from "@/components/project-grid";
-import { ContactChat } from "@/components/contact-chat";
 import { projects } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -29,8 +28,6 @@ export default function ProjetosPage() {
       </section>
 
       <SiteFooter />
-
-      <ContactChat />
     </main>
   );
 }

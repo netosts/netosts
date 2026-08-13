@@ -6,33 +6,43 @@ import { X, Send, Check } from "lucide-react";
 import { profile, contactTopics } from "@/lib/data";
 
 export function ContactChat() {
-  const [revealed, setRevealed] = useState(false);
   const [open, setOpen] = useState(false);
   const [showBubble, setShowBubble] = useState(false);
   const [topic, setTopic] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
 
-  // Revela o chat quando o usuário chega ao contato.
+  // Mantém o avatar visível, mas só mostra o convite no fim da página.
   useEffect(() => {
-    const anchor = document.getElementById("chat-anchor");
-    if (!anchor) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setRevealed(true);
-      },
-      { rootMargin: "0px 0px 120px 0px" },
-    );
-    observer.observe(anchor);
-    return () => observer.disconnect();
-  }, []);
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let invitationScheduled = false;
 
-  // Mostra o balão de fala logo após o chat ser revelado.
-  useEffect(() => {
-    if (!revealed) return;
-    const t = setTimeout(() => setShowBubble(true), 600);
-    return () => clearTimeout(t);
-  }, [revealed]);
+    function stopListening() {
+      window.removeEventListener("scroll", checkPageBottom);
+      window.removeEventListener("resize", checkPageBottom);
+    }
+
+    function checkPageBottom() {
+      const viewportBottom = window.scrollY + window.innerHeight;
+      const pageBottom = document.documentElement.scrollHeight;
+      const reachedBottom = viewportBottom >= pageBottom - 4;
+
+      if (!reachedBottom || invitationScheduled) return;
+
+      invitationScheduled = true;
+      stopListening();
+      timer = setTimeout(() => setShowBubble(true), 600);
+    }
+
+    window.addEventListener("scroll", checkPageBottom, { passive: true });
+    window.addEventListener("resize", checkPageBottom);
+    checkPageBottom();
+
+    return () => {
+      stopListening();
+      if (timer) clearTimeout(timer);
+    };
+  }, []);
 
   const selectedTopic = contactTopics.find((t) => t.id === topic);
 
@@ -52,8 +62,6 @@ export function ContactChat() {
     setTopic(null);
     setMessage("");
   }
-
-  if (!revealed) return null;
 
   return (
     <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3 md:bottom-8 md:right-8">

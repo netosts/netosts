@@ -1,6 +1,5 @@
 import { ProjectSlider } from "@/components/project-slider";
 import { ContentSection } from "@/components/content-section";
-import { ContactChat } from "@/components/contact-chat";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SectionHeading } from "@/components/section-heading";
@@ -55,12 +54,7 @@ export default function Page() {
         <ContentSection contents={recentContents} />
       </section>
 
-      {/* Âncora que revela o chat de contato */}
-      <div id="chat-anchor" aria-hidden className="h-px w-full" />
-
       <SiteFooter />
-
-      <ContactChat />
     </main>
   );
 }
