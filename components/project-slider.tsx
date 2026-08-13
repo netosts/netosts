@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Code2 } from "lucide-react";
 import type { Project } from "@/lib/data";
@@ -12,7 +12,7 @@ export function ProjectSlider({ projects }: { projects: Project[] }) {
 
   const go = useCallback(
     (next: number) => {
-      setIndex((prev) => {
+      setIndex(() => {
         const total = count;
         return ((next % total) + total) % total;
       });
@@ -134,9 +134,9 @@ function ProjectSlide({
 }) {
   return (
     <div className="min-w-full" aria-hidden={!active}>
-      <div className="grid gap-0 md:grid-cols-2">
+      <div className="grid gap-0 md:h-[26rem] md:grid-cols-2">
         {/* Imagem / identidade visual */}
-        <div className="relative aspect-[4/3] overflow-hidden bg-muted md:aspect-auto md:min-h-[26rem]">
+        <div className="relative aspect-[4/3] overflow-hidden bg-muted md:aspect-auto md:h-full">
           {project.image ? (
             <Image
               src={project.image}
@@ -149,7 +149,7 @@ function ProjectSlide({
               priority={active}
             />
           ) : (
-            <div className="flex h-full min-h-72 flex-col justify-between p-8 md:min-h-[26rem] md:p-10">
+            <div className="flex h-full min-h-72 flex-col justify-between p-8 md:min-h-0 md:p-10">
               <Code2 className="size-8 text-[var(--accent-solid)]" />
               <div className="space-y-3">
                 <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
@@ -164,7 +164,7 @@ function ProjectSlide({
         </div>
 
         {/* Conteúdo */}
-        <div className="flex flex-col justify-between gap-8 p-8 md:p-10">
+        <div className="flex flex-col justify-between gap-8 p-8 md:h-full md:p-10">
           <div className="space-y-5">
             <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-muted-foreground">
               <span
