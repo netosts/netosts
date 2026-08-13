@@ -40,6 +40,8 @@ export function ContentSection({ contents }: { contents: Content[] }) {
           <li key={content.id} className="bg-background">
             <a
               href={content.href}
+              target="_blank"
+              rel="noopener noreferrer"
               className="group flex h-full flex-col gap-5 p-5 transition-colors hover:bg-accent"
             >
               <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-lg bg-muted">
