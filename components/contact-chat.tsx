@@ -1,47 +1,61 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { X, Send, Check } from "lucide-react";
 import { profile, contactTopics } from "@/lib/data";
 
+const INVITATION_DELAY_MS = 3_000;
+const INVITATION_STORAGE_KEY = "contact-chat-invitation-date";
+
+function getLocalDateKey() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function wasInvitationShownToday() {
+  try {
+    return localStorage.getItem(INVITATION_STORAGE_KEY) === getLocalDateKey();
+  } catch {
+    return false;
+  }
+}
+
+function markInvitationShownToday() {
+  try {
+    localStorage.setItem(INVITATION_STORAGE_KEY, getLocalDateKey());
+  } catch {
+    // The chat still works when browser storage is unavailable.
+  }
+}
+
 export function ContactChat() {
+  const invitationHandled = useRef(false);
   const [open, setOpen] = useState(false);
   const [showBubble, setShowBubble] = useState(false);
   const [topic, setTopic] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
 
-  // Mantém o avatar visível, mas só mostra o convite no fim da página.
+  // Exibe o convite uma vez por dia, depois que a pessoa viu a página por alguns segundos.
   useEffect(() => {
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    let invitationScheduled = false;
-
-    function stopListening() {
-      window.removeEventListener("scroll", checkPageBottom);
-      window.removeEventListener("resize", checkPageBottom);
+    if (wasInvitationShownToday()) {
+      invitationHandled.current = true;
+      return;
     }
 
-    function checkPageBottom() {
-      const viewportBottom = window.scrollY + window.innerHeight;
-      const pageBottom = document.documentElement.scrollHeight;
-      const reachedBottom = viewportBottom >= pageBottom - 4;
+    const timer = setTimeout(() => {
+      if (invitationHandled.current || wasInvitationShownToday()) return;
 
-      if (!reachedBottom || invitationScheduled) return;
+      invitationHandled.current = true;
+      markInvitationShownToday();
+      setShowBubble(true);
+    }, INVITATION_DELAY_MS);
 
-      invitationScheduled = true;
-      stopListening();
-      timer = setTimeout(() => setShowBubble(true), 600);
-    }
-
-    window.addEventListener("scroll", checkPageBottom, { passive: true });
-    window.addEventListener("resize", checkPageBottom);
-    checkPageBottom();
-
-    return () => {
-      stopListening();
-      if (timer) clearTimeout(timer);
-    };
+    return () => clearTimeout(timer);
   }, []);
 
   const selectedTopic = contactTopics.find((t) => t.id === topic);
@@ -69,6 +83,8 @@ export function ContactChat() {
       {showBubble && !open && (
         <button
           onClick={() => {
+            invitationHandled.current = true;
+            markInvitationShownToday();
             setOpen(true);
             setShowBubble(false);
           }}
@@ -149,7 +165,7 @@ export function ContactChat() {
                     crossOrigin="anonymous"
                   />
                   <p className="max-w-[85%] rounded-2xl rounded-tl-sm bg-muted px-3.5 py-2.5 text-sm leading-relaxed">
-                    Que bom te ver por aqui! Sobre o que você quer falar?
+                    Que bom ter você por aqui! O que você gostaria de conversar?
                   </p>
                 </div>
 
@@ -239,6 +255,10 @@ export function ContactChat() {
       {/* Avatar / botão fixo */}
       <button
         onClick={() => {
+          if (!open) {
+            invitationHandled.current = true;
+            markInvitationShownToday();
+          }
           setOpen((v) => !v);
           setShowBubble(false);
         }}
