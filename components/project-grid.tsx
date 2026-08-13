@@ -56,15 +56,41 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
               href={project.href ?? "#"}
               className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border transition-colors hover:bg-accent"
             >
-              <div className="relative aspect-[16/10] overflow-hidden bg-muted">
-                <Image
-                  src={project.image || "/placeholder.svg"}
-                  alt={`Prévia do projeto ${project.title}`}
-                  fill
-                  sizes="(max-width: 640px) 100vw, 50vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  crossOrigin="anonymous"
-                />
+              <div
+                className={`relative aspect-[16/10] overflow-hidden ${
+                  project.video ? "bg-black" : "bg-muted"
+                }`}
+              >
+                {project.video ? (
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="metadata"
+                    poster={project.video.poster}
+                    aria-label={`Demonstração do projeto ${project.title}`}
+                    className="pointer-events-none h-full w-full object-contain"
+                  >
+                    {project.video.sources.map((source) => (
+                      <source
+                        key={source.src}
+                        src={source.src}
+                        type={source.type}
+                      />
+                    ))}
+                    Seu navegador não oferece suporte à reprodução de vídeo.
+                  </video>
+                ) : (
+                  <Image
+                    src={project.image || "/placeholder.svg"}
+                    alt={`Prévia do projeto ${project.title}`}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 50vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    crossOrigin="anonymous"
+                  />
+                )}
               </div>
 
               <div className="flex flex-1 flex-col gap-4 p-6">

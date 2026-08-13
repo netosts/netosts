@@ -1,0 +1,949 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workflow Concept Demo</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #07111f;
+        --panel: rgba(13, 27, 48, 0.84);
+        --panel-solid: #0d1b30;
+        --line: rgba(148, 163, 184, 0.18);
+        --muted: #8290a8;
+        --text: #f4f7fb;
+        --cyan: #22d3ee;
+        --violet: #8b5cf6;
+        --pink: #ec4899;
+        --lime: #a3e635;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      body {
+        position: relative;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 72% 12%, rgba(139, 92, 246, 0.2), transparent 34%),
+          radial-gradient(circle at 20% 90%, rgba(34, 211, 238, 0.12), transparent 38%),
+          var(--bg);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      body::before {
+        position: absolute;
+        inset: 0;
+        content: "";
+        opacity: 0.42;
+        background-image:
+          linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
+        background-size: 32px 32px;
+        mask-image: linear-gradient(to bottom, transparent, black 24%, black 82%, transparent);
+      }
+
+      .shell {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        padding: 28px 34px 30px;
+      }
+
+      header {
+        height: 70px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+
+      .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--cyan);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        width: 22px;
+        height: 2px;
+        border-radius: 99px;
+        content: "";
+        background: linear-gradient(90deg, var(--cyan), var(--violet));
+        box-shadow: 0 0 12px rgba(34, 211, 238, 0.6);
+      }
+
+      h1 {
+        margin: 7px 0 0;
+        font-size: 25px;
+        line-height: 1;
+        letter-spacing: -0.035em;
+      }
+
+      .run-button {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 164px;
+        height: 44px;
+        padding: 0 20px;
+        overflow: hidden;
+        border: 1px solid rgba(34, 211, 238, 0.45);
+        border-radius: 12px;
+        color: #07111f;
+        background: linear-gradient(135deg, #67e8f9, #a78bfa);
+        box-shadow: 0 10px 28px rgba(34, 211, 238, 0.18);
+        font: inherit;
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .run-button::after {
+        position: absolute;
+        top: -80%;
+        left: -35%;
+        width: 36px;
+        height: 120px;
+        content: "";
+        background: rgba(255, 255, 255, 0.42);
+        transform: rotate(24deg);
+        transition: left 0.55s ease;
+      }
+
+      .run-button:hover::after {
+        left: 125%;
+      }
+
+      .run-button svg {
+        width: 16px;
+        height: 16px;
+        fill: currentColor;
+      }
+
+      body[data-state="running"] .run-button,
+      body[data-state="complete"] .run-button {
+        color: var(--cyan);
+        border-color: rgba(34, 211, 238, 0.2);
+        background: rgba(34, 211, 238, 0.08);
+        box-shadow: none;
+      }
+
+      .workspace {
+        position: relative;
+        height: calc(100% - 70px);
+        overflow: hidden;
+        border: 1px solid rgba(148, 163, 184, 0.17);
+        border-radius: 22px;
+        background: rgba(7, 17, 31, 0.5);
+        box-shadow:
+          0 34px 90px rgba(0, 0, 0, 0.32),
+          inset 0 1px rgba(255, 255, 255, 0.025);
+        backdrop-filter: blur(18px);
+      }
+
+      .workspace-head {
+        height: 62px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 22px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .workflow-name {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .workflow-mark {
+        width: 30px;
+        height: 30px;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(139, 92, 246, 0.38);
+        border-radius: 9px;
+        color: #c4b5fd;
+        background: rgba(139, 92, 246, 0.12);
+      }
+
+      .workflow-name strong {
+        display: block;
+        font-size: 13px;
+        letter-spacing: 0.01em;
+      }
+
+      .workflow-name span {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 10px;
+      }
+
+      .status-pill {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 11px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: #aab5c7;
+        background: rgba(15, 23, 42, 0.48);
+        font-size: 10px;
+        font-weight: 700;
+        transition: 0.3s ease;
+      }
+
+      .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #64748b;
+      }
+
+      body[data-state="running"] .status-pill {
+        color: #fde68a;
+        border-color: rgba(250, 204, 21, 0.22);
+        background: rgba(250, 204, 21, 0.07);
+      }
+
+      body[data-state="running"] .status-dot {
+        background: #facc15;
+        box-shadow: 0 0 10px rgba(250, 204, 21, 0.8);
+        animation: blink 0.8s ease-in-out infinite;
+      }
+
+      body[data-state="complete"] .status-pill {
+        color: #bef264;
+        border-color: rgba(163, 230, 53, 0.24);
+        background: rgba(163, 230, 53, 0.08);
+      }
+
+      body[data-state="complete"] .status-dot {
+        background: var(--lime);
+        box-shadow: 0 0 10px rgba(163, 230, 53, 0.65);
+      }
+
+      .canvas {
+        position: absolute;
+        inset: 62px 0 0;
+      }
+
+      .canvas::after {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        content: "";
+        background: radial-gradient(circle at 50% 50%, transparent 22%, rgba(7, 17, 31, 0.24) 100%);
+      }
+
+      .connections {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+
+      .connection-base {
+        fill: none;
+        stroke: rgba(148, 163, 184, 0.2);
+        stroke-width: 2;
+      }
+
+      .connection-glow {
+        fill: none;
+        stroke: url(#flow-gradient);
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        stroke-dasharray: 1;
+        stroke-dashoffset: 1;
+        filter: url(#soft-glow);
+      }
+
+      .packet {
+        opacity: 0;
+        fill: #fff;
+        filter: url(#packet-glow);
+      }
+
+      .node {
+        --node-color: var(--cyan);
+        position: absolute;
+        z-index: 3;
+        width: 202px;
+        height: 132px;
+        padding: 16px;
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 16px;
+        background: linear-gradient(145deg, rgba(18, 35, 59, 0.94), rgba(11, 24, 43, 0.94));
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+        transition:
+          border-color 0.28s ease,
+          box-shadow 0.28s ease,
+          transform 0.28s ease;
+      }
+
+      .node::before {
+        position: absolute;
+        top: -1px;
+        left: 18px;
+        width: 46px;
+        height: 2px;
+        border-radius: 0 0 6px 6px;
+        content: "";
+        background: var(--node-color);
+        box-shadow: 0 0 12px color-mix(in srgb, var(--node-color) 65%, transparent);
+      }
+
+      .node.is-running {
+        transform: translateY(-3px);
+        border-color: color-mix(in srgb, var(--node-color) 52%, transparent);
+        box-shadow:
+          0 20px 46px rgba(0, 0, 0, 0.34),
+          0 0 26px color-mix(in srgb, var(--node-color) 16%, transparent);
+      }
+
+      .node.is-done {
+        border-color: rgba(163, 230, 53, 0.26);
+      }
+
+      .node-1 {
+        top: 205px;
+        left: 70px;
+        --node-color: var(--cyan);
+      }
+
+      .node-2 {
+        top: 205px;
+        left: 350px;
+        --node-color: var(--violet);
+      }
+
+      .node-3 {
+        top: 205px;
+        left: 630px;
+        --node-color: var(--pink);
+      }
+
+      .node-4 {
+        top: 205px;
+        left: 910px;
+        --node-color: var(--lime);
+      }
+
+      .node-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .node-icon {
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border: 1px solid color-mix(in srgb, var(--node-color) 35%, transparent);
+        border-radius: 10px;
+        color: var(--node-color);
+        background: color-mix(in srgb, var(--node-color) 10%, transparent);
+      }
+
+      .node-icon svg {
+        width: 17px;
+        height: 17px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .node-state {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: #65758e;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .node-state i {
+        width: 6px;
+        height: 6px;
+        display: block;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      .node.is-running .node-state {
+        color: var(--node-color);
+      }
+
+      .node.is-running .node-state i {
+        box-shadow: 0 0 9px currentColor;
+        animation: blink 0.7s ease-in-out infinite;
+      }
+
+      .node.is-done .node-state {
+        color: var(--lime);
+      }
+
+      .node h2 {
+        margin: 12px 0 4px;
+        font-size: 15px;
+        letter-spacing: -0.01em;
+      }
+
+      .node p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 10px;
+        line-height: 1.4;
+      }
+
+      .port {
+        position: absolute;
+        top: 61px;
+        width: 10px;
+        height: 10px;
+        border: 2px solid #12243b;
+        border-radius: 50%;
+        background: var(--node-color);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--node-color) 18%, transparent);
+      }
+
+      .port.in {
+        left: -6px;
+      }
+
+      .port.out {
+        right: -6px;
+      }
+
+      .metric-strip {
+        position: absolute;
+        z-index: 3;
+        bottom: 28px;
+        left: 70px;
+        right: 70px;
+        height: 72px;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1.35fr;
+        align-items: center;
+        padding: 0 22px;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        background: rgba(10, 23, 41, 0.68);
+      }
+
+      .metric {
+        padding: 0 18px;
+        border-right: 1px solid var(--line);
+      }
+
+      .metric:first-child {
+        padding-left: 0;
+      }
+
+      .metric:nth-child(3) {
+        border-right: 0;
+      }
+
+      .metric-label {
+        display: block;
+        color: #66758d;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .metric-value {
+        display: block;
+        margin-top: 6px;
+        color: #dce5f2;
+        font-size: 14px;
+        font-weight: 750;
+      }
+
+      .metric-value em {
+        margin-left: 5px;
+        color: var(--muted);
+        font-size: 9px;
+        font-style: normal;
+        font-weight: 500;
+      }
+
+      .progress-wrap {
+        padding-left: 26px;
+      }
+
+      .progress-copy {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        color: var(--muted);
+        font-size: 9px;
+        font-weight: 700;
+      }
+
+      .progress-copy strong {
+        color: #dce5f2;
+      }
+
+      .progress-track {
+        height: 5px;
+        overflow: hidden;
+        border-radius: 99px;
+        background: rgba(148, 163, 184, 0.12);
+      }
+
+      .progress-bar {
+        width: 0;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--cyan), var(--violet), var(--pink), var(--lime));
+        box-shadow: 0 0 14px rgba(139, 92, 246, 0.45);
+        transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      .toast {
+        position: absolute;
+        z-index: 7;
+        top: 82px;
+        right: 24px;
+        width: 255px;
+        padding: 13px 15px;
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        border: 1px solid rgba(163, 230, 53, 0.25);
+        border-radius: 13px;
+        opacity: 0;
+        background: rgba(18, 38, 36, 0.94);
+        box-shadow: 0 18px 46px rgba(0, 0, 0, 0.3);
+        transform: translateY(-8px);
+        transition: 0.38s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      .toast-icon {
+        width: 28px;
+        height: 28px;
+        display: grid;
+        flex: 0 0 auto;
+        place-items: center;
+        border-radius: 50%;
+        color: #07111f;
+        background: var(--lime);
+        font-size: 15px;
+        font-weight: 900;
+      }
+
+      .toast strong,
+      .toast span {
+        display: block;
+      }
+
+      .toast strong {
+        font-size: 11px;
+      }
+
+      .toast span {
+        margin-top: 3px;
+        color: #8ba9a0;
+        font-size: 9px;
+      }
+
+      body[data-state="complete"] .toast {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .cursor {
+        position: fixed;
+        z-index: 30;
+        top: 0;
+        left: 0;
+        width: 18px;
+        height: 23px;
+        pointer-events: none;
+        opacity: 0;
+        filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+        transform: translate(-2px, -2px);
+        transition: opacity 0.12s ease;
+      }
+
+      .cursor svg {
+        width: 100%;
+        height: 100%;
+        fill: #fff;
+        stroke: #07111f;
+        stroke-width: 1.2;
+      }
+
+      .click-wave {
+        position: fixed;
+        z-index: 29;
+        width: 12px;
+        height: 12px;
+        border: 1px solid rgba(103, 232, 249, 0.9);
+        border-radius: 50%;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .click-wave.go {
+        animation: click-wave 0.5s ease-out;
+      }
+
+      body[data-state="running"] #flow-1 {
+        animation: draw-line 0.65s 0.08s ease forwards;
+      }
+
+      body[data-state="running"] #packet-1 {
+        animation: packet-one 0.65s 0.13s ease-in-out forwards;
+      }
+
+      body[data-state="running"] #flow-2 {
+        animation: draw-line 0.72s 0.88s ease forwards;
+      }
+
+      body[data-state="running"] #packet-2 {
+        animation: packet-two 0.72s 0.93s ease-in-out forwards;
+      }
+
+      body[data-state="running"] #flow-3 {
+        animation: draw-line 0.72s 1.73s ease forwards;
+      }
+
+      body[data-state="running"] #packet-3 {
+        animation: packet-three 0.72s 1.78s ease-in-out forwards;
+      }
+
+      @keyframes draw-line {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      @keyframes packet-one {
+        0% { opacity: 0; transform: translate(270px, 267px); }
+        12% { opacity: 1; }
+        88% { opacity: 1; }
+        100% { opacity: 0; transform: translate(350px, 267px); }
+      }
+
+      @keyframes packet-two {
+        0% { opacity: 0; transform: translate(550px, 267px); }
+        12% { opacity: 1; }
+        88% { opacity: 1; }
+        100% { opacity: 0; transform: translate(630px, 267px); }
+      }
+
+      @keyframes packet-three {
+        0% { opacity: 0; transform: translate(830px, 267px); }
+        12% { opacity: 1; }
+        88% { opacity: 1; }
+        100% { opacity: 0; transform: translate(910px, 267px); }
+      }
+
+      @keyframes blink {
+        50% { opacity: 0.38; }
+      }
+
+      @keyframes click-wave {
+        0% { opacity: 0.9; transform: translate(-50%, -50%) scale(0.5); }
+        100% { opacity: 0; transform: translate(-50%, -50%) scale(4); }
+      }
+    </style>
+  </head>
+  <body data-state="idle">
+    <div class="shell">
+      <header>
+        <div>
+          <div class="eyebrow" data-i18n="eyebrow">Automação de workflows</div>
+          <h1 data-i18n="headline">Processos que fluem sozinhos.</h1>
+        </div>
+        <button id="run-flow" class="run-button" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
+          <span data-i18n="run">Executar fluxo</span>
+        </button>
+      </header>
+
+      <main class="workspace">
+        <div class="workspace-head">
+          <div class="workflow-name">
+            <div class="workflow-mark">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                <circle cx="5" cy="12" r="2.2" /><circle cx="19" cy="6" r="2.2" /><circle cx="19" cy="18" r="2.2" />
+                <path d="M7.2 12h3.3c3.5 0 3.5-6 6.3-6M10.5 12c3.5 0 3.5 6 6.3 6" />
+              </svg>
+            </div>
+            <div><strong data-i18n="workflowName">Pipeline de atendimento</strong><span data-i18n="demoLabel">Automação conceitual · ambiente de demonstração</span></div>
+          </div>
+          <div class="status-pill"><i class="status-dot"></i><span id="status-label" data-i18n="ready">Pronto para executar</span></div>
+        </div>
+
+        <div class="canvas">
+          <svg class="connections" viewBox="0 0 1210 530" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="flow-gradient" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#22d3ee" /><stop offset="0.52" stop-color="#8b5cf6" /><stop offset="1" stop-color="#ec4899" />
+              </linearGradient>
+              <filter id="soft-glow"><feGaussianBlur stdDeviation="2" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+              <filter id="packet-glow"><feGaussianBlur stdDeviation="4" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+            </defs>
+            <path class="connection-base" d="M272 267 C302 267 320 267 350 267" pathLength="1" />
+            <path class="connection-base" d="M552 267 C582 267 600 267 630 267" pathLength="1" />
+            <path class="connection-base" d="M832 267 C862 267 880 267 910 267" pathLength="1" />
+            <path id="flow-1" class="connection-glow" d="M272 267 C302 267 320 267 350 267" pathLength="1" />
+            <path id="flow-2" class="connection-glow" d="M552 267 C582 267 600 267 630 267" pathLength="1" />
+            <path id="flow-3" class="connection-glow" d="M832 267 C862 267 880 267 910 267" pathLength="1" />
+            <circle id="packet-1" class="packet" r="5" cx="0" cy="0" />
+            <circle id="packet-2" class="packet" r="5" cx="0" cy="0" />
+            <circle id="packet-3" class="packet" r="5" cx="0" cy="0" />
+          </svg>
+
+          <article class="node node-1" data-step="1">
+            <span class="port out"></span>
+            <div class="node-head">
+              <div class="node-icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7" /><path d="m17 15 3 3-3 3" /></svg></div>
+              <div class="node-state"><i></i><span data-i18n="waiting">Aguardando</span></div>
+            </div>
+            <h2 data-i18n="node1Title">Capturar entrada</h2><p data-i18n="node1Description">Recebe e organiza cada nova solicitação.</p>
+          </article>
+
+          <article class="node node-2" data-step="2">
+            <span class="port in"></span><span class="port out"></span>
+            <div class="node-head">
+              <div class="node-icon"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18" /><circle cx="12" cy="12" r="7" /></svg></div>
+              <div class="node-state"><i></i><span data-i18n="waiting">Aguardando</span></div>
+            </div>
+            <h2 data-i18n="node2Title">Enriquecer dados</h2><p data-i18n="node2Description">Combina contexto e informações relevantes.</p>
+          </article>
+
+          <article class="node node-3" data-step="3">
+            <span class="port in"></span><span class="port out"></span>
+            <div class="node-head">
+              <div class="node-icon"><svg viewBox="0 0 24 24"><path d="M12 3 21 12 12 21 3 12 12 3Z" /><path d="m9 12 2 2 4-4" /></svg></div>
+              <div class="node-state"><i></i><span data-i18n="waiting">Aguardando</span></div>
+            </div>
+            <h2 data-i18n="node3Title">Aplicar regras</h2><p data-i18n="node3Description">Prioriza o fluxo conforme cada cenário.</p>
+          </article>
+
+          <article class="node node-4" data-step="4">
+            <span class="port in"></span>
+            <div class="node-head">
+              <div class="node-icon"><svg viewBox="0 0 24 24"><path d="M5 12.5 9.5 17 19 7.5" /></svg></div>
+              <div class="node-state"><i></i><span data-i18n="waiting">Aguardando</span></div>
+            </div>
+            <h2 data-i18n="node4Title">Entregar resultado</h2><p data-i18n="node4Description">Conclui a tarefa e registra a execução.</p>
+          </article>
+
+          <section class="metric-strip" aria-label="Métricas do fluxo">
+            <div class="metric"><span class="metric-label" data-i18n="steps">Etapas</span><span class="metric-value"><b id="steps-value">0</b> / 4</span></div>
+            <div class="metric"><span class="metric-label" data-i18n="processed">Itens processados</span><span class="metric-value"><b id="items-value">0</b><em data-i18n="events">eventos</em></span></div>
+            <div class="metric"><span class="metric-label" data-i18n="time">Tempo</span><span class="metric-value"><b id="time-value">—</b><em data-i18n="seconds">segundos</em></span></div>
+            <div class="progress-wrap">
+              <div class="progress-copy"><span data-i18n="progress">Progresso da execução</span><strong id="progress-value">0%</strong></div>
+              <div class="progress-track"><div id="progress-bar" class="progress-bar"></div></div>
+            </div>
+          </section>
+
+          <div class="toast"><div class="toast-icon">✓</div><div><strong data-i18n="toastTitle">Workflow concluído</strong><span data-i18n="toastDescription">4 etapas executadas com sucesso</span></div></div>
+        </div>
+      </main>
+    </div>
+
+    <div class="cursor" aria-hidden="true"><svg viewBox="0 0 18 23"><path d="M2 1.5v16.8l4.3-4.1 3 6.5 3.1-1.5-3-6.3h6.1L2 1.5Z" /></svg></div>
+    <div class="click-wave" aria-hidden="true"></div>
+
+    <script>
+      const body = document.body;
+      const cursor = document.querySelector('.cursor');
+      const wave = document.querySelector('.click-wave');
+      const runButton = document.querySelector('#run-flow');
+      const statusLabel = document.querySelector('#status-label');
+      const nodes = [...document.querySelectorAll('.node')];
+      const progressBar = document.querySelector('#progress-bar');
+      const progressValue = document.querySelector('#progress-value');
+      const stepsValue = document.querySelector('#steps-value');
+      const itemsValue = document.querySelector('#items-value');
+      const timeValue = document.querySelector('#time-value');
+
+      const translations = {
+        pt: {
+          eyebrow: 'Automação de workflows',
+          headline: 'Processos que fluem sozinhos.',
+          run: 'Executar fluxo',
+          runningButton: 'Executando…',
+          completedButton: 'Concluído',
+          workflowName: 'Pipeline de atendimento',
+          demoLabel: 'Automação conceitual · ambiente de demonstração',
+          ready: 'Pronto para executar',
+          runningStatus: 'Fluxo em execução',
+          completedStatus: 'Execução concluída',
+          waiting: 'Aguardando',
+          running: 'Executando',
+          done: 'Concluído',
+          node1Title: 'Capturar entrada',
+          node1Description: 'Recebe e organiza cada nova solicitação.',
+          node2Title: 'Enriquecer dados',
+          node2Description: 'Combina contexto e informações relevantes.',
+          node3Title: 'Aplicar regras',
+          node3Description: 'Prioriza o fluxo conforme cada cenário.',
+          node4Title: 'Entregar resultado',
+          node4Description: 'Conclui a tarefa e registra a execução.',
+          steps: 'Etapas',
+          processed: 'Itens processados',
+          events: 'eventos',
+          time: 'Tempo',
+          seconds: 'segundos',
+          progress: 'Progresso da execução',
+          toastTitle: 'Workflow concluído',
+          toastDescription: '4 etapas executadas com sucesso',
+        },
+        en: {
+          eyebrow: 'Workflow automation',
+          headline: 'Processes that flow on their own.',
+          run: 'Run workflow',
+          runningButton: 'Running…',
+          completedButton: 'Completed',
+          workflowName: 'Service request pipeline',
+          demoLabel: 'Concept automation · demonstration environment',
+          ready: 'Ready to run',
+          runningStatus: 'Workflow in progress',
+          completedStatus: 'Run completed',
+          waiting: 'Waiting',
+          running: 'Running',
+          done: 'Completed',
+          node1Title: 'Capture input',
+          node1Description: 'Receives and organizes each new request.',
+          node2Title: 'Enrich data',
+          node2Description: 'Combines context with relevant information.',
+          node3Title: 'Apply rules',
+          node3Description: 'Prioritizes the flow for each scenario.',
+          node4Title: 'Deliver result',
+          node4Description: 'Completes the task and records the run.',
+          steps: 'Steps',
+          processed: 'Processed items',
+          events: 'events',
+          time: 'Time',
+          seconds: 'seconds',
+          progress: 'Run progress',
+          toastTitle: 'Workflow completed',
+          toastDescription: '4 steps completed successfully',
+        },
+        fr: {
+          eyebrow: 'Automatisation des workflows',
+          headline: 'Des processus qui avancent tout seuls.',
+          run: 'Exécuter le workflow',
+          runningButton: 'Exécution…',
+          completedButton: 'Terminé',
+          workflowName: 'Pipeline de traitement des demandes',
+          demoLabel: 'Automatisation conceptuelle · environnement de démonstration',
+          ready: 'Prêt à démarrer',
+          runningStatus: 'Workflow en cours',
+          completedStatus: 'Exécution terminée',
+          waiting: 'En attente',
+          running: 'En cours',
+          done: 'Terminé',
+          node1Title: 'Capturer les données',
+          node1Description: 'Reçoit et organise chaque nouvelle demande.',
+          node2Title: 'Enrichir les données',
+          node2Description: 'Associe le contexte aux informations utiles.',
+          node3Title: 'Appliquer les règles',
+          node3Description: 'Priorise le flux selon chaque scénario.',
+          node4Title: 'Livrer le résultat',
+          node4Description: 'Finalise la tâche et consigne son exécution.',
+          steps: 'Étapes',
+          processed: 'Éléments traités',
+          events: 'événements',
+          time: 'Durée',
+          seconds: 'secondes',
+          progress: 'Progression de l’exécution',
+          toastTitle: 'Workflow terminé',
+          toastDescription: '4 étapes exécutées avec succès',
+        },
+      };
+
+      const requestedLanguage = new URLSearchParams(location.search).get('lang');
+      const language = Object.hasOwn(translations, requestedLanguage) ? requestedLanguage : 'pt';
+      const copy = translations[language];
+      document.documentElement.lang = language === 'pt' ? 'pt-BR' : language;
+      document.querySelectorAll('[data-i18n]').forEach((element) => {
+        element.textContent = copy[element.dataset.i18n];
+      });
+
+      addEventListener('pointermove', (event) => {
+        cursor.style.opacity = '1';
+        cursor.style.left = `${event.clientX}px`;
+        cursor.style.top = `${event.clientY}px`;
+      });
+
+      addEventListener('pointerdown', (event) => {
+        wave.style.left = `${event.clientX}px`;
+        wave.style.top = `${event.clientY}px`;
+        wave.classList.remove('go');
+        void wave.offsetWidth;
+        wave.classList.add('go');
+      });
+
+      const setNode = (index, state) => {
+        const node = nodes[index];
+        node.classList.toggle('is-running', state === 'running');
+        node.classList.toggle('is-done', state === 'done');
+        node.querySelector('.node-state span').textContent = state === 'running' ? copy.running : state === 'done' ? copy.done : copy.waiting;
+      };
+
+      const setProgress = (step, items, time) => {
+        const percent = step * 25;
+        progressBar.style.width = `${percent}%`;
+        progressValue.textContent = `${percent}%`;
+        stepsValue.textContent = step;
+        itemsValue.textContent = items;
+        if (time) timeValue.textContent = time;
+      };
+
+      runButton.addEventListener('click', () => {
+        if (body.dataset.state !== 'idle') return;
+        body.dataset.state = 'running';
+        runButton.querySelector('span').textContent = copy.runningButton;
+        statusLabel.textContent = copy.runningStatus;
+
+        setNode(0, 'running');
+        setTimeout(() => { setNode(0, 'done'); setNode(1, 'running'); setProgress(1, 6); }, 650);
+        setTimeout(() => { setNode(1, 'done'); setNode(2, 'running'); setProgress(2, 14); }, 1480);
+        setTimeout(() => { setNode(2, 'done'); setNode(3, 'running'); setProgress(3, 21); }, 2320);
+        setTimeout(() => {
+          setNode(3, 'done');
+          setProgress(4, 24, '3.2');
+          body.dataset.state = 'complete';
+          statusLabel.textContent = copy.completedStatus;
+          runButton.querySelector('span').textContent = copy.completedButton;
+        }, 3160);
+      });
+    </script>
+  </body>
+</html>

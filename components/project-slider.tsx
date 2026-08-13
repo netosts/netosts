@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Code2 } from "lucide-react";
 import type { Project } from "@/lib/data";
@@ -136,8 +136,14 @@ function ProjectSlide({
     <div className="min-w-full" aria-hidden={!active}>
       <div className="grid gap-0 md:h-[26rem] md:grid-cols-2">
         {/* Imagem / identidade visual */}
-        <div className="relative aspect-[4/3] overflow-hidden bg-muted md:aspect-auto md:h-full">
-          {project.image ? (
+        <div
+          className={`relative overflow-hidden md:aspect-auto md:h-full ${
+            project.video ? "aspect-video bg-black" : "aspect-[4/3] bg-muted"
+          }`}
+        >
+          {project.video ? (
+            <ProjectVideo project={project} active={active} />
+          ) : project.image ? (
             <Image
               src={project.image}
               alt={`Prévia do projeto ${project.title}`}
@@ -215,5 +221,49 @@ function ProjectSlide({
         </div>
       </div>
     </div>
+  );
+}
+
+function ProjectVideo({
+  project,
+  active,
+}: {
+  project: Project;
+  active: boolean;
+}) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (active) {
+      void video.play().catch(() => {
+        // Browsers may still block autoplay depending on user preferences.
+      });
+    } else {
+      video.pause();
+    }
+  }, [active]);
+
+  if (!project.video) return null;
+
+  return (
+    <video
+      ref={videoRef}
+      autoPlay
+      loop
+      muted
+      playsInline
+      preload={active ? "metadata" : "none"}
+      poster={project.video.poster}
+      aria-label={`Demonstração do projeto ${project.title}`}
+      className="pointer-events-none h-full w-full object-contain"
+    >
+      {project.video.sources.map((source) => (
+        <source key={source.src} src={source.src} type={source.type} />
+      ))}
+      Seu navegador não oferece suporte à reprodução de vídeo.
+    </video>
   );
 }

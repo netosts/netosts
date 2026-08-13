@@ -13,6 +13,13 @@ export type Project = {
   type: EProjectType;
   category: string;
   stack: string[];
+  video?: {
+    poster: string;
+    sources: Array<{
+      src: string;
+      type: string;
+    }>;
+  };
   image?: string;
   href?: string;
 };
@@ -51,11 +58,21 @@ export const projects: Project[] = [
       "Plataforma distribuída orientada a APIs, A2A e MCPs para fluxos de agentes autônomos e integrações com ferramentas externas e internas, com comunicação entre serviços e autenticação.",
     company: "Netstic",
     type: EProjectType.TRABALHO,
+    video: {
+      poster: "/project/workflow/poster-pt.webp",
+      sources: [
+        { src: "/project/workflow/demo-pt.webm", type: "video/webm" },
+        { src: "/project/workflow/demo-pt.mp4", type: "video/mp4" },
+      ],
+    },
     stack: [
       "Python",
       "FastAPI",
       "asyncio",
       "PostgreSQL",
+      "A2A",
+      "MCP",
+      "OpenAPI/Swagger",
       "Redis",
       "Docker",
       "Vue.js",
