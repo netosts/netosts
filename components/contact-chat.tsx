@@ -74,7 +74,7 @@ export function ContactChat() {
           }}
           className="max-w-[15rem] origin-bottom-right animate-in fade-in slide-in-from-bottom-2 rounded-2xl rounded-br-sm border border-border bg-card px-4 py-3 text-left text-sm leading-relaxed text-card-foreground shadow-lg transition-transform hover:-translate-y-0.5"
         >
-          Olá! Se quiser falar comigo, é só clicar aqui.
+          Olá! Se quiser falar comigo, é só clicar aqui. 👋
         </button>
       )}
 
